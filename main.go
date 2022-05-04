@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	BASE_USER     = ""
-	BASE_CONTACT  = ""
+	BASE          = ""
 	USERNAME      = ""
 	PASSWORD      = ""
 	ALERTZY_TOKEN = ""
@@ -50,7 +49,7 @@ func userReq() (string, string, error) {
 
 	client := c.RequestBuilder{
 		Headers:        http.Header{},
-		BaseURL:        BASE_USER,
+		BaseURL:        BASE,
 		ConnectTimeout: 5000 * time.Millisecond,
 		LogTime:        true,
 	}
@@ -90,17 +89,16 @@ func userReq() (string, string, error) {
 func contReq(id, token string) ([]string, error) {
 
 	header := http.Header{}
-	header.Set("id", id)
-	header.Set("token", token)
+	header.Set("Authorization", token)
 
 	client := c.RequestBuilder{
 		Headers:        header,
-		BaseURL:        BASE_CONTACT,
+		BaseURL:        BASE,
 		ConnectTimeout: 5000 * time.Millisecond,
 		LogTime:        true,
 	}
 
-	reps := client.Get("/contacts?birthday=39")
+	reps := client.Get(fmt.Sprintf("/contacts?birthday=0&userid=%s", id))
 
 	if reps.Err != nil {
 		return nil, reps.Err
